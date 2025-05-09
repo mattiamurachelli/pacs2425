@@ -1,0 +1,39 @@
+1. Read the Challenge24-25-2.pdf
+2. Download the necessary files
+3. Read the documentation regarding compressed matrices (CSR and CSC)
+    Brief explanation for CSR (CSC is similar): 
+    We use 3 std::vectors called e.g. row_index, column_index and values
+    If the sparse matrix has size (m,n) and has nnz non-zero-elements, then :
+    1) row_index has m+1 elements and in its i-th position it contains the number of non-zero-values in the previous i-1 rows (this means that
+    row_index[m] = nnz).
+    2) col_index has nnz elements and it contains the column indexes of the non-zero-values
+    3) values has the same size as col_index and is strongly associated with the latter, as v[i] contains the value that is in the column indicated
+    by column_index[i].
+    some examples can be found at : (https://en.wikipedia.org/wiki/Sparse_matrix#:~:text=The%20compressed%20sparse%20row%20(CSR,row%20indices%2C%20hence%20the%20name.)
+4. Implement the matrix class template in the algebra namespace
+   The declaration should be Matrix<T,StorageOrder> where T denotes the type of elements stored and StorageOrder is an enum class containing
+   row-wise o column-wise attributes.
+   The matrix class should implement the following methods :
+   1) Constructor that takes as input matrix dimensions, and also a method to resize a matrix
+   2) Setter that given indices and value let's you set the value when the matrix is in an uncompressed state (it should be able to handle also
+   updates, in the case the value has to be overwritten)
+   3) compress() and uncompress() methods that switch the type of representation in the current state.
+    They should be used for performance purpouses, as it is easier to load the matrix when it is in the uncompressed state but computation
+    should be performed when it is in the compressed state.
+   4) a bool is_compressed() method
+   5) classical call operator () to access elements of the matrix, both in the const and non-const version
+   6) friend operator for the multiplication with a std::vector<T>
+   This should be done following the instructions given in the file, where there are some suggestions on how to make it in the most efficient
+   way wrt the StorageOrder used. Furthermore it should work both for the compressed and uncompressed version (if the matrix is uncompressed 
+   we can't just compress it and then perform the computation, as our objective is to show that multiplication is faster if performed when the
+   matrix is in the compressed format!)
+   This operator should also be overloaded in order to be able to accept as vector a matrix objcet with num_cols = 1
+   7) Implement a method that reads and stores the matrix when given in the MatrixMarket format, in order to be able to load the matrix and perform
+   the necesasary testing (we can use the Chrono.hpp tool provided by Prof Formaggia, "if you use directly the one of the Examples remember to link with
+   the libpacs.so library")
+   8) Implement a template norm<T>() method that computes the norm type indicated in the template. It could be either One (max sum over columns),
+   Infinity (max sum over rows) or Frobenius. The function has to be able to handle also the case in which the matrix stores complex numbers.
+5. Create a Makefile to compile and perform the testing (this time don't ignore warnings, even if they are harmless or we lose points for nothing)
+6. Create a good folder structure with src/ and include/ directiories in order to separate .cpp and .hpp files
+7. Upload an explanatory README file with the details of our implementation (the code should also be well commented, maybe we can try with
+   doxygenated comments)
